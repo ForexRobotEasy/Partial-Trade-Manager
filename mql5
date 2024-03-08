@@ -1,0 +1,72 @@
+
+//+------------------------------------------------------------------+
+//|                                                   Partial Trade Manager                                     |
+//|                                      Copyright © 2021 forexroboteasy.com                       |
+//|                                         Developed by Forex Robot Easy Team                |
+//+------------------------------------------------------------------+
+
+// Define input parameters for stop loss, partial sell, take profit, trailing stop, and breakeven level
+input double StopLoss = 100; // Default stop loss level
+input double PartialSell = 50; // Default partial sell level
+input double TakeProfit = 200; // Default take profit level
+input double TrailingStop = 50; // Default trailing stop level
+input double BreakevenLevel = 100; // Default breakeven level
+
+//+------------------------------------------------------------------+
+//|                                       Expert initialization function                                                  |
+//+------------------------------------------------------------------+
+int OnInit()
+{
+    // Set stop loss, partial sell, take profit, trailing stop, and breakeven level for each order
+    for (int i = 0; i < OrdersTotal(); i++)
+    {
+        if (OrderSelect(i, SELECT_BY_POS, MODE_TRADES))
+        {
+            // Set stop loss level
+            if (StopLoss > 0)
+            {
+                double stopLossLevel = OrderOpenPrice() - StopLoss * _Point;
+                OrderModify(OrderTicket(), OrderOpenPrice(), stopLossLevel, OrderTakeProfit(), OrderExpiration());
+            }
+            
+            // Set partial sell level
+            if (PartialSell > 0)
+            {
+                double partialSellLevel = OrderOpenPrice() + PartialSell * _Point;
+                OrderModify(OrderTicket(), OrderOpenPrice(), OrderStopLoss(), partialSellLevel, OrderExpiration());
+            }
+            
+            // Set take profit level
+            if (TakeProfit > 0)
+            {
+                double takeProfitLevel = OrderOpenPrice() + TakeProfit * _Point;
+                OrderModify(OrderTicket(), OrderOpenPrice(), OrderStopLoss(), takeProfitLevel, OrderExpiration());
+            }
+            
+            // Set trailing stop level
+            if (TrailingStop > 0)
+            {
+                double trailingStopLevel = OrderOpenPrice() + TrailingStop * _Point;
+                OrderModify(OrderTicket(), OrderOpenPrice(), OrderStopLoss(), trailingStopLevel, OrderExpiration());
+            }
+            
+            // Set breakeven level
+            if (BreakevenLevel > 0)
+            {
+                double breakevenLevel = OrderOpenPrice() + BreakevenLevel * _Point;
+                OrderModify(OrderTicket(), OrderOpenPrice(), OrderStopLoss(), breakevenLevel, OrderExpiration());
+            }
+        }
+    }
+    
+    return(INIT_SUCCEEDED);
+}
+
+//+------------------------------------------------------------------+
+//|                                   Expert start function (main loop)                                                 |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+    // Add your trading logic here
+}
+
